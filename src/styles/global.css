@@ -1,8 +1,206 @@
 body {
-    background-color: #f5f5f5;
-    font-family: Arial, Helvetica, sans-serif;
+    background-color: #e9ecef;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #333;
 }
 
 * {
     box-sizing: border-box;
+}
+
+/* Resume A4 Layout */
+.resume-a4 {
+    width: 100%;
+    max-width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: var(--theme-content-bg, white);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+}
+
+.resume-sidebar {
+    background-color: var(--theme-sidebar-bg, #2c3e50);
+    color: var(--theme-sidebar-text, #ecf0f1);
+    padding: 2.5rem 2rem;
+    height: 100%;
+    min-height: 297mm;
+}
+
+.resume-sidebar h5 {
+    color: var(--theme-sidebar-text, #fff);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--theme-sidebar-border, #34495e);
+    padding-bottom: 0.5rem;
+}
+
+.resume-content {
+    padding: 2.5rem 3rem;
+    background-color: var(--theme-content-bg, #fff);
+}
+
+.resume-name {
+    font-size: 2.75rem;
+    font-weight: 700;
+    color: var(--theme-text-primary, #2c3e50);
+    margin-bottom: 0.2rem;
+    line-height: 1.2;
+}
+
+.resume-title {
+    font-size: 1.25rem;
+    color: var(--theme-accent, #3498db);
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
+.resume-section-title {
+    color: var(--theme-text-primary, #2c3e50);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.resume-section-title::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background-color: var(--theme-divider, #ecf0f1);
+    margin-left: 1rem;
+}
+
+.resume-item-title {
+    font-weight: 600;
+    color: var(--theme-text-primary, #2c3e50);
+    margin-bottom: 0.1rem;
+}
+
+.resume-item-subtitle {
+    font-weight: 500;
+    color: var(--theme-text-secondary, #7f8c8d);
+    font-size: 0.95rem;
+}
+
+.resume-item-date {
+    color: var(--theme-text-light, #95a5a6);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.resume-list {
+    padding-left: 1.2rem;
+    margin-top: 0.5rem;
+    color: var(--theme-text-dark, #444);
+    font-size: 0.95rem;
+}
+
+.resume-list li {
+    margin-bottom: 0.3rem;
+}
+
+.badge-skill {
+    background-color: var(--theme-sidebar-border, #34495e) !important;
+    color: var(--theme-sidebar-text, #ecf0f1) !important;
+    font-weight: 400 !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 4px !important;
+    font-size: 0.85rem !important;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.profile-img-container {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--theme-sidebar-border, #34495e);
+    background-color: var(--theme-sidebar-border, #34495e);
+}
+
+.profile-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.resume-contact-item {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--theme-sidebar-text, #bdc3c7);
+}
+
+.resume-contact-item strong {
+    color: var(--theme-sidebar-text, #ecf0f1);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+}
+
+/* --- PRINT LAYOUT --- */
+@media print {
+    body {
+        background-color: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .print-full-width {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .resume-a4 {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Force background colors and themes to print */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Avoid page breaks inside important elements */
+    .resume-a4 h4, .resume-a4 h5 {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+    
+    .resume-a4 .mb-4, .resume-a4 .mb-3 {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    @page {
+        size: A4;
+        margin: 0;
+    }
 }

@@ -1,0 +1,51 @@
+/* --- MODERN UI UPGRADES --- */
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f8f9fa; 
+}
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1; 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8; 
+}
+
+/* Accordion Animations & Shadows */
+.custom-accordion .accordion-item {
+    transition: all 0.2s ease-in-out;
+}
+.custom-accordion .accordion-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important;
+}
+.custom-accordion .accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,0.1);
+}
+.custom-accordion .accordion-button::after {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Navbar / App Shell */
+.navbar-brand span {
+    letter-spacing: 0.5px;
+}
+
+/* Mobile Responsiveness for Preview Panel */
+@media (max-width: 991px) {
+    #resume-preview-container {
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        /* Allow horizontal scrolling on mobile instead of crushing the A4 layout */
+    }
+    .resume-a4 {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
