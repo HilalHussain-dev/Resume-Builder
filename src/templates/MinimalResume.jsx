@@ -1,7 +1,9 @@
-export default function MinimalResume({ summary, personalInfo, education, experience, skills, languages, projects }) {
+import { optionalFieldsConfig } from "../config/additionalFields";
+
+export default function MinimalResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects }) {
     return (
         <div className="resume-a4 p-5" style={{ backgroundColor: 'var(--theme-content-bg, #fff)' }}>
-            
+
             {/* Header */}
             <div className="text-center border-bottom pb-4 mb-4" style={{ borderColor: 'var(--theme-divider, #eee) !important' }}>
                 <h1 style={{ fontWeight: 300, color: 'var(--theme-text-primary, #333)', letterSpacing: '2px', fontSize: '3rem' }}>
@@ -10,13 +12,20 @@ export default function MinimalResume({ summary, personalInfo, education, experi
                 <h4 style={{ color: 'var(--theme-accent, #666)', fontWeight: 400, marginBottom: '1.5rem' }}>
                     {personalInfo?.jobTitle || "Professional Title"}
                 </h4>
-                
+
                 <div className="d-flex justify-content-center flex-wrap gap-3" style={{ fontSize: '0.9rem', color: 'var(--theme-text-secondary, #666)' }}>
                     {personalInfo?.email && <span>{personalInfo.email}</span>}
                     {personalInfo?.email && personalInfo?.phone && <span>|</span>}
                     {personalInfo?.phone && <span>{personalInfo.phone}</span>}
                     {(personalInfo?.email || personalInfo?.phone) && personalInfo?.address && <span>|</span>}
                     {personalInfo?.address && <span>{personalInfo.address}</span>}
+
+                    {visibleAdditionalFields?.map(key => {
+                        const fieldConfig = optionalFieldsConfig.find(f => f.key === key);
+                        const value = additionalInfo?.[key];
+                        if (!fieldConfig || !value) return null;
+                        return <span key={key}>| {fieldConfig.label}: {value}</span>;
+                    })}
                 </div>
             </div>
 

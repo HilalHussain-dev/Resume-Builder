@@ -1,7 +1,9 @@
-export default function CreativeResume({ summary, personalInfo, education, experience, skills, languages, projects }) {
+import { optionalFieldsConfig } from "../config/additionalFields";
+
+export default function CreativeResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects }) {
     return (
         <div className="resume-a4" style={{ backgroundColor: 'var(--theme-content-bg, #fff)', position: 'relative' }}>
-            
+
             {/* Left Accent Strip */}
             <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '40px', backgroundColor: 'var(--theme-accent, #3498db)' }}></div>
 
@@ -9,7 +11,7 @@ export default function CreativeResume({ summary, personalInfo, education, exper
                 <div className="row mb-5 align-items-center">
                     <div className="col-md-8">
                         <h1 style={{ fontWeight: 900, fontSize: '3.5rem', color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', lineHeight: 1, marginBottom: '0.5rem' }}>
-                            {personalInfo?.fullName?.split(' ')[0] || "First"} <br/>
+                            {personalInfo?.fullName?.split(' ')[0] || "First"} <br />
                             <span style={{ color: 'var(--theme-accent, #3498db)' }}>{personalInfo?.fullName?.split(' ').slice(1).join(' ') || "Last"}</span>
                         </h1>
                         <h3 style={{ fontWeight: 300, fontSize: '1.5rem', color: 'var(--theme-text-secondary, #666)', letterSpacing: '2px', marginTop: '1rem' }}>
@@ -27,7 +29,7 @@ export default function CreativeResume({ summary, personalInfo, education, exper
 
                 <div className="row">
                     <div className="col-md-4 pe-4 border-end" style={{ borderColor: 'var(--theme-divider, #eee) !important' }}>
-                        
+
                         {/* Contact Info */}
                         <div className="mb-5">
                             <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
@@ -37,6 +39,17 @@ export default function CreativeResume({ summary, personalInfo, education, exper
                                 {personalInfo?.email && <p className="mb-2"><strong>E.</strong> {personalInfo.email}</p>}
                                 {personalInfo?.phone && <p className="mb-2"><strong>T.</strong> {personalInfo.phone}</p>}
                                 {personalInfo?.address && <p className="mb-2"><strong>A.</strong> {personalInfo.address}</p>}
+
+                                {visibleAdditionalFields?.map(key => {
+                                    const fieldConfig = optionalFieldsConfig.find(f => f.key === key);
+                                    const value = additionalInfo?.[key];
+                                    if (!fieldConfig || !value) return null;
+                                    return (
+                                        <p key={key} className="mb-2">
+                                            <strong title={fieldConfig.label}>{fieldConfig.label.substring(0, 1)}.</strong> {value}
+                                        </p>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -78,7 +91,7 @@ export default function CreativeResume({ summary, personalInfo, education, exper
                     </div>
 
                     <div className="col-md-8 ps-5">
-                        
+
                         {/* Summary */}
                         {summary && (
                             <div className="mb-5">

@@ -1,7 +1,9 @@
-export default function ProfessionalResume({ summary, personalInfo, education, experience, skills, languages, projects }) {
+import { optionalFieldsConfig } from "../config/additionalFields";
+
+export default function ProfessionalResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects }) {
     return (
         <div className="resume-a4" style={{ backgroundColor: 'var(--theme-content-bg, #fff)' }}>
-            
+
             {/* Header Block */}
             <div className="p-4 px-5 text-white" style={{ backgroundColor: 'var(--theme-sidebar-bg, #2c3e50)' }}>
                 <div className="row align-items-center">
@@ -16,7 +18,18 @@ export default function ProfessionalResume({ summary, personalInfo, education, e
                     <div className="col-md-4 text-end" style={{ fontSize: '0.9rem', color: 'var(--theme-sidebar-text, #fff)', opacity: 0.85 }}>
                         {personalInfo?.email && <div className="mb-1">{personalInfo.email}</div>}
                         {personalInfo?.phone && <div className="mb-1">{personalInfo.phone}</div>}
-                        {personalInfo?.address && <div>{personalInfo.address}</div>}
+                        {personalInfo?.address && <div className="mb-1">{personalInfo.address}</div>}
+
+                        {visibleAdditionalFields?.map(key => {
+                            const fieldConfig = optionalFieldsConfig.find(f => f.key === key);
+                            const value = additionalInfo?.[key];
+                            if (!fieldConfig || !value) return null;
+                            return (
+                                <div key={key} className="mb-1">
+                                    <span style={{ opacity: 0.7 }}>{fieldConfig.label}:</span> {value}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

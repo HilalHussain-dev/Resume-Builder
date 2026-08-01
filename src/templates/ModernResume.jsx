@@ -1,4 +1,6 @@
-export default function ModernResume({ summary, personalInfo, education, experience, skills, languages, projects }) {
+import { optionalFieldsConfig } from "../config/additionalFields";
+
+export default function ModernResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects }) {
     return (
         <div className="resume-a4">
             <div className="row g-0 h-100">
@@ -30,6 +32,19 @@ export default function ModernResume({ summary, personalInfo, education, experie
                         <strong>Location</strong><br/>
                         <span className="text-break">{personalInfo?.address || "City, Country"}</span>
                     </div>
+
+                    {/* Additional Info */}
+                    {visibleAdditionalFields?.map(key => {
+                        const fieldConfig = optionalFieldsConfig.find(f => f.key === key);
+                        const value = additionalInfo?.[key];
+                        if (!fieldConfig || !value) return null;
+                        return (
+                            <div key={key} className="resume-contact-item">
+                                <strong>{fieldConfig.label}</strong><br/>
+                                <span className="text-break">{value}</span>
+                            </div>
+                        );
+                    })}
 
                     {/* Skills */}
                     <h5>Skills</h5>

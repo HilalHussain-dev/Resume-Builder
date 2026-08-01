@@ -2,9 +2,12 @@ import Sidebar from "./Sidebar";
 import PreviewPanel from "./PreviewPanel";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import NewResumeModal from "../common/NewResumeModal";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { downloadPDF } from "../../utils/pdfExport";
+import { useTheme } from "../../context/ThemeContext";
+import { defaultAdditionalInfo } from "../../config/additionalFields";
 
 const loadState = (key, defaultValue) => {
     try {
@@ -15,18 +18,28 @@ const loadState = (key, defaultValue) => {
     }
 };
 
+const defaultPersonalInfo = {
+    fullName: "",
+    jobTitle: "",
+    email: "",
+    phone: "",
+    address: "",
+    profileImage: ""
+};
+
 export default function MainLayout() {
+    const { setTheme } = useTheme();
     const [isDownloading, setIsDownloading] = useState(false);
+    const [showNewResumeModal, setShowNewResumeModal] = useState(false);
+
     const [selectedTemplate, setSelectedTemplate] = useState(() => loadState("resume-template", "modern"));
     const [summary, setSummary] = useState(() => loadState("resume-summary", ""));
-    const [personalInfo, setPersonalInfo] = useState(() => loadState("resume-personalInfo", {
-        fullName: "",
-        jobTitle: "",
-        email: "",
-        phone: "",
-        address: "",
-        profileImage: ""
-    }));
+    const [personalInfo, setPersonalInfo] = useState(() => loadState("resume-personalInfo", defaultPersonalInfo));
+
+    // New States for Optional Fields
+    const [additionalInfo, setAdditionalInfo] = useState(() => loadState("resume-additionalInfo", defaultAdditionalInfo));
+    const [visibleAdditionalFields, setVisibleAdditionalFields] = useState(() => loadState("resume-visibleAdditionalFields", []));
+
     const [education, setEducation] = useState(() => loadState("resume-education", [
         {
             id: Date.now(),
@@ -46,12 +59,14 @@ export default function MainLayout() {
         localStorage.setItem("resume-template", JSON.stringify(selectedTemplate));
         localStorage.setItem("resume-summary", JSON.stringify(summary));
         localStorage.setItem("resume-personalInfo", JSON.stringify(personalInfo));
+        localStorage.setItem("resume-additionalInfo", JSON.stringify(additionalInfo));
+        localStorage.setItem("resume-visibleAdditionalFields", JSON.stringify(visibleAdditionalFields));
         localStorage.setItem("resume-education", JSON.stringify(education));
         localStorage.setItem("resume-experience", JSON.stringify(experience));
         localStorage.setItem("resume-skills", JSON.stringify(skills));
         localStorage.setItem("resume-projects", JSON.stringify(projects));
         localStorage.setItem("resume-languages", JSON.stringify(languages));
-    }, [selectedTemplate, summary, personalInfo, education, experience, skills, projects, languages]);
+    }, [selectedTemplate, summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, projects, languages]);
 
     const handleDownload = async () => {
         setIsDownloading(true);
@@ -66,54 +81,126 @@ export default function MainLayout() {
         }
     };
 
+    const isResumeEmpty = () => {
+        const hasPersonalInfo = Object.values(personalInfo).some(val => val !== "");
+        const hasAdditionalInfo = Object.values(additionalInfo).some(val => val !== "");
+        const hasSummary = summary.trim() !== "";
+        const hasExperience = experience.length > 0;
+        const hasSkills = skills.length > 0;
+        const hasProjects = projects.length > 0;
+        const hasLanguages = languages.length > 0;
+
+        let hasEducation = false;
+        if (education.length > 1) {
+            hasEducation = true;
+        } else if (education.length === 1) {
+            const edu = education[0];
+            hasEducation = edu.degree !== "" || edu.institute !== "" || edu.startYear !== "" || edu.endYear !== "";
+        }
+
+        return !(hasPersonalInfo || hasAdditionalInfo || hasSummary || hasExperience || hasSkills || hasProjects || hasLanguages || hasEducation);
+    };
+
+    const handleNewResumeClick = () => {
+        if (isResumeEmpty()) {
+            toast("Your resume is already empty.", { icon: "ℹ️" });
+        } else {
+            setShowNewResumeModal(true);
+        }
+    };
+
+    const handleConfirmNewResume = () => {
+        // Reset states
+        setSelectedTemplate("modern");
+        setTheme("modernBlue");
+        setSummary("");
+        setPersonalInfo(defaultPersonalInfo);
+        setAdditionalInfo(defaultAdditionalInfo);
+        setVisibleAdditionalFields([]);
+        setEducation([{ id: Date.now(), degree: "", institute: "", startYear: "", endYear: "" }]);
+        setExperience([]);
+        setSkills([]);
+        setProjects([]);
+        setLanguages([]);
+
+        // Clear local storage for these keys
+        const keysToRemove = [
+            "resume-template",
+            "resume-theme",
+            "resume-summary",
+            "resume-personalInfo",
+            "resume-additionalInfo",
+            "resume-visibleAdditionalFields",
+            "resume-education",
+            "resume-experience",
+            "resume-skills",
+            "resume-projects",
+            "resume-languages"
+        ];
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+
+        setShowNewResumeModal(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        toast.success("New resume created successfully.");
+    };
+
     return (
         <div className="bg-light min-vh-100 d-flex flex-column">
-            <Navbar onDownload={handleDownload} isDownloading={isDownloading} />
+            <Navbar onDownload={handleDownload} isDownloading={isDownloading} onNewResume={handleNewResumeClick} />
             <div className="container-fluid py-4 flex-grow-1">
                 <div className="row">
-
                     {/* Left Side */}
-                <div className="col-lg-4 mb-4 no-print">
-                    <Sidebar
-                        selectedTemplate={selectedTemplate}
-                        setSelectedTemplate={setSelectedTemplate}
-                        summary={summary}
-                        setSummary={setSummary}
-                        personalInfo={personalInfo}
-                        setPersonalInfo={setPersonalInfo}
-                        education={education}
-                        setEducation={setEducation}
-                        experience={experience}
-                        setExperience={setExperience}
-                        skills={skills}
-                        setSkills={setSkills}
-                        projects={projects}
-                        setProjects={setProjects}
-                        languages={languages}
-                        setLanguages={setLanguages}
-                    />
-
-                </div>
-
-                {/* Right Side */}
-                <div className="col-lg-8 print-full-width">
-                    <div id="resume-preview-container">
-                        <PreviewPanel
+                    <div className="col-lg-4 mb-4 no-print">
+                        <Sidebar
                             selectedTemplate={selectedTemplate}
+                            setSelectedTemplate={setSelectedTemplate}
                             summary={summary}
+                            setSummary={setSummary}
                             personalInfo={personalInfo}
+                            setPersonalInfo={setPersonalInfo}
+                            additionalInfo={additionalInfo}
+                            setAdditionalInfo={setAdditionalInfo}
+                            visibleAdditionalFields={visibleAdditionalFields}
+                            setVisibleAdditionalFields={setVisibleAdditionalFields}
                             education={education}
+                            setEducation={setEducation}
                             experience={experience}
+                            setExperience={setExperience}
                             skills={skills}
+                            setSkills={setSkills}
                             projects={projects}
+                            setProjects={setProjects}
                             languages={languages}
+                            setLanguages={setLanguages}
                         />
                     </div>
-                </div>
 
-            </div>
+                    {/* Right Side */}
+                    <div className="col-lg-8 print-full-width">
+                        <div id="resume-preview-container">
+                            <PreviewPanel
+                                selectedTemplate={selectedTemplate}
+                                summary={summary}
+                                personalInfo={personalInfo}
+                                additionalInfo={additionalInfo}
+                                visibleAdditionalFields={visibleAdditionalFields}
+                                education={education}
+                                experience={experience}
+                                skills={skills}
+                                projects={projects}
+                                languages={languages}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
             <Footer />
+
+            <NewResumeModal
+                isOpen={showNewResumeModal}
+                onClose={() => setShowNewResumeModal(false)}
+                onConfirm={handleConfirmNewResume}
+            />
         </div>
     );
 }

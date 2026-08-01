@@ -15,7 +15,7 @@ body {
     min-height: 297mm;
     margin: 0 auto;
     background: var(--theme-content-bg, white);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     position: relative;
     border-radius: 8px;
@@ -189,12 +189,14 @@ body {
     }
 
     /* Avoid page breaks inside important elements */
-    .resume-a4 h4, .resume-a4 h5 {
+    .resume-a4 h4,
+    .resume-a4 h5 {
         page-break-after: avoid;
         break-after: avoid;
     }
-    
-    .resume-a4 .mb-4, .resume-a4 .mb-3 {
+
+    .resume-a4 .mb-4,
+    .resume-a4 .mb-3 {
         page-break-inside: avoid;
         break-inside: avoid;
     }

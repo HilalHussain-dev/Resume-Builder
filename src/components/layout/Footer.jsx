@@ -6,9 +6,9 @@ export default function Footer() {
                     © {new Date().getFullYear()} ResumePro. All rights reserved.
                 </p>
                 <div className="d-flex gap-3 text-muted">
-                    <i className="bi bi-github" style={{cursor: 'pointer'}}></i>
-                    <i className="bi bi-twitter" style={{cursor: 'pointer'}}></i>
-                    <i className="bi bi-linkedin" style={{cursor: 'pointer'}}></i>
+                    <a href="https://www.linkedin.com/in/hilal-hussain-970b60368" target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">
+                        <i className="bi bi-linkedin" style={{cursor: 'pointer'}}></i>
+                    </a>
                 </div>
             </div>
         </footer>

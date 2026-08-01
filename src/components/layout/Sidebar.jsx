@@ -17,6 +17,10 @@ export default function Sidebar({
     setSummary,
     personalInfo,
     setPersonalInfo,
+    additionalInfo,
+    setAdditionalInfo,
+    visibleAdditionalFields,
+    setVisibleAdditionalFields,
     education,
     setEducation,
     experience,
@@ -36,26 +40,26 @@ export default function Sidebar({
 
     return (
         <div className="bg-white rounded-4 shadow-sm p-4 h-100 no-print" style={{ border: '1px solid #eaeaea' }}>
-            
+
             <div className="mb-4 pb-3 border-bottom">
                 <h6 className="text-muted text-uppercase small fw-bold mb-3"><i className="bi bi-palette-fill me-2"></i>Design Settings</h6>
                 <ThemeSelector />
-                <TemplateSelector 
+                <TemplateSelector
                     selectedTemplate={selectedTemplate}
                     setSelectedTemplate={setSelectedTemplate}
                 />
             </div>
 
             <h6 className="text-muted text-uppercase small fw-bold mb-3"><i className="bi bi-pencil-square me-2"></i>Content Editor</h6>
-            
+
             <div className="accordion custom-accordion" id="resumeAccordion">
-                
+
                 {/* Personal Info */}
                 <div className="accordion-item border-0 mb-3 rounded-3 shadow-sm bg-white" style={{ border: '1px solid #f0f0f0 !important' }}>
                     <h2 className="accordion-header">
-                        <button 
-                            className={`accordion-button rounded-3 fw-bold ${openSection === 'personal' ? '' : 'collapsed'}`} 
-                            type="button" 
+                        <button
+                            className={`accordion-button rounded-3 fw-bold ${openSection === 'personal' ? '' : 'collapsed'}`}
+                            type="button"
                             onClick={() => toggleSection('personal')}
                             style={{ backgroundColor: openSection === 'personal' ? '#f8f9fa' : '#fff', boxShadow: 'none' }}
                         >
@@ -64,7 +68,14 @@ export default function Sidebar({
                     </h2>
                     <div className={`accordion-collapse collapse ${openSection === 'personal' ? 'show' : ''}`}>
                         <div className="accordion-body pt-1">
-                            <PersonalForm personalInfo={personalInfo} setPersonalInfo={setPersonalInfo} />
+                            <PersonalForm
+                                personalInfo={personalInfo}
+                                setPersonalInfo={setPersonalInfo}
+                                additionalInfo={additionalInfo}
+                                setAdditionalInfo={setAdditionalInfo}
+                                visibleAdditionalFields={visibleAdditionalFields}
+                                setVisibleAdditionalFields={setVisibleAdditionalFields}
+                            />
                         </div>
                     </div>
                 </div>
@@ -72,9 +83,9 @@ export default function Sidebar({
                 {/* Summary */}
                 <div className="accordion-item border-0 mb-3 rounded-3 shadow-sm bg-white" style={{ border: '1px solid #f0f0f0 !important' }}>
                     <h2 className="accordion-header">
-                        <button 
-                            className={`accordion-button rounded-3 fw-bold ${openSection === 'summary' ? '' : 'collapsed'}`} 
-                            type="button" 
+                        <button
+                            className={`accordion-button rounded-3 fw-bold ${openSection === 'summary' ? '' : 'collapsed'}`}
+                            type="button"
                             onClick={() => toggleSection('summary')}
                             style={{ backgroundColor: openSection === 'summary' ? '#f8f9fa' : '#fff', boxShadow: 'none' }}
                         >
@@ -91,9 +102,9 @@ export default function Sidebar({
                 {/* Experience */}
                 <div className="accordion-item border-0 mb-3 rounded-3 shadow-sm bg-white" style={{ border: '1px solid #f0f0f0 !important' }}>
                     <h2 className="accordion-header">
-                        <button 
-                            className={`accordion-button rounded-3 fw-bold ${openSection === 'experience' ? '' : 'collapsed'}`} 
-                            type="button" 
+                        <button
+                            className={`accordion-button rounded-3 fw-bold ${openSection === 'experience' ? '' : 'collapsed'}`}
+                            type="button"
                             onClick={() => toggleSection('experience')}
                             style={{ backgroundColor: openSection === 'experience' ? '#f8f9fa' : '#fff', boxShadow: 'none' }}
                         >
@@ -110,9 +121,9 @@ export default function Sidebar({
                 {/* Education */}
                 <div className="accordion-item border-0 mb-3 rounded-3 shadow-sm bg-white" style={{ border: '1px solid #f0f0f0 !important' }}>
                     <h2 className="accordion-header">
-                        <button 
-                            className={`accordion-button rounded-3 fw-bold ${openSection === 'education' ? '' : 'collapsed'}`} 
-                            type="button" 
+                        <button
+                            className={`accordion-button rounded-3 fw-bold ${openSection === 'education' ? '' : 'collapsed'}`}
+                            type="button"
                             onClick={() => toggleSection('education')}
                             style={{ backgroundColor: openSection === 'education' ? '#f8f9fa' : '#fff', boxShadow: 'none' }}
                         >
@@ -129,9 +140,9 @@ export default function Sidebar({
                 {/* Projects */}
                 <div className="accordion-item border-0 mb-3 rounded-3 shadow-sm bg-white" style={{ border: '1px solid #f0f0f0 !important' }}>
                     <h2 className="accordion-header">
-                        <button 
-                            className={`accordion-button rounded-3 fw-bold ${openSection === 'projects' ? '' : 'collapsed'}`} 
-                            type="button" 
+                        <button
+                            className={`accordion-button rounded-3 fw-bold ${openSection === 'projects' ? '' : 'collapsed'}`}
+                            type="button"
                             onClick={() => toggleSection('projects')}
                             style={{ backgroundColor: openSection === 'projects' ? '#f8f9fa' : '#fff', boxShadow: 'none' }}
                         >
@@ -148,9 +159,9 @@ export default function Sidebar({
                 {/* Skills */}
                 <div className="accordion-item border-0 mb-3 rounded-3 shadow-sm bg-white" style={{ border: '1px solid #f0f0f0 !important' }}>
                     <h2 className="accordion-header">
-                        <button 
-                            className={`accordion-button rounded-3 fw-bold ${openSection === 'skills' ? '' : 'collapsed'}`} 
-                            type="button" 
+                        <button
+                            className={`accordion-button rounded-3 fw-bold ${openSection === 'skills' ? '' : 'collapsed'}`}
+                            type="button"
                             onClick={() => toggleSection('skills')}
                             style={{ backgroundColor: openSection === 'skills' ? '#f8f9fa' : '#fff', boxShadow: 'none' }}
                         >
@@ -167,9 +178,9 @@ export default function Sidebar({
                 {/* Languages */}
                 <div className="accordion-item border-0 mb-3 rounded-3 shadow-sm bg-white" style={{ border: '1px solid #f0f0f0 !important' }}>
                     <h2 className="accordion-header">
-                        <button 
-                            className={`accordion-button rounded-3 fw-bold ${openSection === 'languages' ? '' : 'collapsed'}`} 
-                            type="button" 
+                        <button
+                            className={`accordion-button rounded-3 fw-bold ${openSection === 'languages' ? '' : 'collapsed'}`}
+                            type="button"
                             onClick={() => toggleSection('languages')}
                             style={{ backgroundColor: openSection === 'languages' ? '#f8f9fa' : '#fff', boxShadow: 'none' }}
                         >
