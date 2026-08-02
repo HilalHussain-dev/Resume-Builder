@@ -1,6 +1,114 @@
 import { optionalFieldsConfig } from "../config/additionalFields";
 
-export default function CreativeResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects }) {
+export default function CreativeResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects, sectionsConfig = [] }) {
+    const renderSection = (sectionId) => {
+        switch (sectionId) {
+            case "summary":
+                return summary && (
+                    <div key="summary" className="mb-5">
+                        <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Profile
+                        </h5>
+                        <p style={{ whiteSpace: "pre-wrap", color: "var(--theme-text-dark, #555)", fontSize: "0.95rem", lineHeight: "1.8" }}>
+                            {summary}
+                        </p>
+                    </div>
+                );
+            case "experience":
+                return experience?.length > 0 && (
+                    <div key="experience" className="mb-5">
+                        <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Experience
+                        </h5>
+                        {experience.map((exp) => (
+                            <div key={exp.id} className="mb-4 position-relative" style={{ paddingLeft: '1.5rem', borderLeft: '2px solid var(--theme-divider, #eee)' }}>
+                                <div style={{ position: 'absolute', left: '-6px', top: '5px', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--theme-accent, #3498db)' }}></div>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--theme-accent, #3498db)', fontWeight: 700, marginBottom: '0.2rem' }}>{exp.startDate || "Start Date"} – {exp.endDate || "Present"}</div>
+                                <h5 className="mb-1" style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)' }}>{exp.position || "Job Title"}</h5>
+                                <div className="mb-2" style={{ fontWeight: 600, color: 'var(--theme-text-secondary, #777)' }}>{exp.company || "Company Name"}</div>
+                                {exp.responsibilities && (
+                                    <ul style={{ paddingLeft: '1rem', color: 'var(--theme-text-dark, #555)', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                                        {exp.responsibilities
+                                            .split("\n")
+                                            .filter(line => line.trim() !== "")
+                                            .map((line, index) => (
+                                                <li key={index} className="mb-1">{line}</li>
+                                            ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                );
+            case "projects":
+                return projects?.length > 0 && (
+                    <div key="projects" className="mb-5">
+                        <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Projects
+                        </h5>
+                        {projects.map((proj) => (
+                            <div key={proj.id} className="mb-4 p-4" style={{ backgroundColor: 'var(--theme-divider, #f9f9f9)', borderRadius: '8px', borderLeft: '4px solid var(--theme-accent, #3498db)' }}>
+                                <h6 className="mb-2" style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)' }}>{proj.title || "Project Title"}</h6>
+                                <p className="mb-2" style={{ fontSize: "0.9rem", color: "var(--theme-text-dark, #555)", lineHeight: '1.6' }}>
+                                    {proj.description || "Project description goes here."}
+                                </p>
+                                {proj.link && (
+                                    <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "var(--theme-accent, #3498db)", fontWeight: 700 }}>
+                                        {proj.link}
+                                    </a>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                );
+            case "education":
+                return education?.length > 0 && (
+                    <div key="education" className="mb-5">
+                        <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Education
+                        </h5>
+                        {education.map((edu) => (
+                            <div key={edu.id} className="mb-3">
+                                <div style={{ fontSize: '0.8rem', color: 'var(--theme-accent, #3498db)', fontWeight: 700 }}>{edu.startYear || "Start"} – {edu.endYear || "End"}</div>
+                                <h6 className="mb-1" style={{ fontWeight: 700, color: 'var(--theme-text-primary, #333)' }}>{edu.degree || "Degree"}</h6>
+                                <div style={{ fontSize: '0.85rem', color: 'var(--theme-text-secondary, #666)' }}>{edu.institute || "Institution"}</div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            case "skills":
+                return skills?.length > 0 && (
+                    <div key="skills" className="mb-5">
+                        <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Expertise
+                        </h5>
+                        <div className="d-flex flex-wrap gap-2">
+                            {skills.map((skill, index) => (
+                                <span key={index} style={{ backgroundColor: 'transparent', color: 'var(--theme-text-primary, #333)', fontSize: '0.9rem', fontWeight: 600, border: '1px solid var(--theme-accent, #3498db)', padding: '0.3rem 0.6rem', borderRadius: '20px' }}>
+                                    {skill}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                );
+            case "languages":
+                return languages?.length > 0 && (
+                    <div key="languages" className="mb-5">
+                        <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Languages
+                        </h5>
+                        <ul className="list-unstyled" style={{ color: 'var(--theme-text-dark, #555)', fontSize: '0.9rem' }}>
+                            {languages.map((lang, index) => (
+                                <li key={index} className="mb-2 pb-2 border-bottom" style={{ borderColor: 'var(--theme-divider, #eee) !important' }}>{lang}</li>
+                            ))}
+                        </ul>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="resume-a4" style={{ backgroundColor: 'var(--theme-content-bg, #fff)', position: 'relative' }}>
 
@@ -53,107 +161,10 @@ export default function CreativeResume({ summary, personalInfo, additionalInfo, 
                             </div>
                         </div>
 
-                        {/* Education */}
-                        <div className="mb-5">
-                            <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
-                                <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Education
-                            </h5>
-                            {education?.length > 0 ? (
-                                education.map((edu) => (
-                                    <div key={edu.id} className="mb-3">
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--theme-accent, #3498db)', fontWeight: 700 }}>{edu.startYear || "Start"} – {edu.endYear || "End"}</div>
-                                        <h6 className="mb-1" style={{ fontWeight: 700, color: 'var(--theme-text-primary, #333)' }}>{edu.degree || "Degree"}</h6>
-                                        <div style={{ fontSize: '0.85rem', color: 'var(--theme-text-secondary, #666)' }}>{edu.institute || "Institution"}</div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-muted small mb-4">No education added.</p>
-                            )}
-                        </div>
-
-                        {/* Skills */}
-                        <div className="mb-5">
-                            <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
-                                <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Expertise
-                            </h5>
-                            {skills?.length > 0 ? (
-                                <div className="d-flex flex-wrap gap-2">
-                                    {skills.map((skill, index) => (
-                                        <span key={index} style={{ backgroundColor: 'transparent', color: 'var(--theme-text-primary, #333)', fontSize: '0.9rem', fontWeight: 600, border: '1px solid var(--theme-accent, #3498db)', padding: '0.3rem 0.6rem', borderRadius: '20px' }}>
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-muted small">No skills added.</p>
-                            )}
-                        </div>
                     </div>
 
                     <div className="col-md-8 ps-5">
-
-                        {/* Summary */}
-                        {summary && (
-                            <div className="mb-5">
-                                <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
-                                    <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Profile
-                                </h5>
-                                <p style={{ whiteSpace: "pre-wrap", color: "var(--theme-text-dark, #555)", fontSize: "0.95rem", lineHeight: "1.8" }}>
-                                    {summary}
-                                </p>
-                            </div>
-                        )}
-
-                        {/* Experience */}
-                        <div className="mb-5">
-                            <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
-                                <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Experience
-                            </h5>
-                            {experience?.length > 0 ? (
-                                experience.map((exp) => (
-                                    <div key={exp.id} className="mb-4 position-relative" style={{ paddingLeft: '1.5rem', borderLeft: '2px solid var(--theme-divider, #eee)' }}>
-                                        <div style={{ position: 'absolute', left: '-6px', top: '5px', width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--theme-accent, #3498db)' }}></div>
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--theme-accent, #3498db)', fontWeight: 700, marginBottom: '0.2rem' }}>{exp.startDate || "Start Date"} – {exp.endDate || "Present"}</div>
-                                        <h5 className="mb-1" style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)' }}>{exp.position || "Job Title"}</h5>
-                                        <div className="mb-2" style={{ fontWeight: 600, color: 'var(--theme-text-secondary, #777)' }}>{exp.company || "Company Name"}</div>
-                                        {exp.responsibilities && (
-                                            <ul style={{ paddingLeft: '1rem', color: 'var(--theme-text-dark, #555)', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                                                {exp.responsibilities
-                                                    .split("\n")
-                                                    .filter(line => line.trim() !== "")
-                                                    .map((line, index) => (
-                                                        <li key={index} className="mb-1">{line}</li>
-                                                    ))}
-                                            </ul>
-                                        )}
-                                    </div>
-                                ))
-                            ) : (
-                                <p className="text-muted small mb-4">No experience added.</p>
-                            )}
-                        </div>
-
-                        {/* Projects */}
-                        {projects?.length > 0 && (
-                            <div className="mb-5">
-                                <h5 style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)', textTransform: 'uppercase', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
-                                    <span style={{ width: '30px', height: '4px', backgroundColor: 'var(--theme-accent, #3498db)', display: 'inline-block', marginRight: '10px' }}></span> Projects
-                                </h5>
-                                {projects.map((proj) => (
-                                    <div key={proj.id} className="mb-4 p-4" style={{ backgroundColor: 'var(--theme-divider, #f9f9f9)', borderRadius: '8px', borderLeft: '4px solid var(--theme-accent, #3498db)' }}>
-                                        <h6 className="mb-2" style={{ fontWeight: 800, color: 'var(--theme-text-primary, #333)' }}>{proj.title || "Project Title"}</h6>
-                                        <p className="mb-2" style={{ fontSize: "0.9rem", color: "var(--theme-text-dark, #555)", lineHeight: '1.6' }}>
-                                            {proj.description || "Project description goes here."}
-                                        </p>
-                                        {proj.link && (
-                                            <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.85rem", color: "var(--theme-accent, #3498db)", fontWeight: 700 }}>
-                                                {proj.link}
-                                            </a>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        {sectionsConfig.filter(s => s.visible).map(section => renderSection(section.id))}
                     </div>
                 </div>
             </div>

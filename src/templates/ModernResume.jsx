@@ -1,6 +1,102 @@
 import { optionalFieldsConfig } from "../config/additionalFields";
 
-export default function ModernResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects }) {
+export default function ModernResume({ summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, languages, projects, sectionsConfig = [] }) {
+    const renderSection = (sectionId) => {
+        switch (sectionId) {
+            case "summary":
+                return summary && (
+                    <div key="summary" className="mb-4">
+                        <p style={{ whiteSpace: "pre-wrap", color: "var(--theme-text-dark, #444)", fontSize: "0.95rem", lineHeight: "1.6" }}>
+                            {summary}
+                        </p>
+                    </div>
+                );
+            case "experience":
+                return experience?.length > 0 && (
+                    <div key="experience" className="mb-4">
+                        <h4 className="resume-section-title">Experience</h4>
+                        {experience.map((exp) => (
+                            <div key={exp.id} className="mb-4">
+                                <div className="d-flex justify-content-between align-items-baseline mb-1">
+                                    <h5 className="resume-item-title mb-0">{exp.position || "Job Title"}</h5>
+                                    <span className="resume-item-date">{exp.startDate || "Start Date"} – {exp.endDate || "Present"}</span>
+                                </div>
+                                <div className="resume-item-subtitle mb-2">{exp.company || "Company Name"}</div>
+                                {exp.responsibilities && (
+                                    <ul className="resume-list">
+                                        {exp.responsibilities
+                                            .split("\n")
+                                            .filter(line => line.trim() !== "")
+                                            .map((line, index) => (
+                                                <li key={index}>{line}</li>
+                                            ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                );
+            case "projects":
+                return projects?.length > 0 && (
+                    <div key="projects" className="mb-4">
+                        <h4 className="resume-section-title">Projects</h4>
+                        {projects.map((proj) => (
+                            <div key={proj.id} className="mb-4">
+                                <h5 className="resume-item-title mb-1">{proj.title || "Project Title"}</h5>
+                                <p className="mb-1" style={{ fontSize: "0.95rem", color: "var(--theme-text-dark, #444)" }}>
+                                    {proj.description || "Project description goes here."}
+                                </p>
+                                {proj.link && (
+                                    <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.9rem", color: "var(--theme-accent, #3498db)" }}>
+                                        {proj.link}
+                                    </a>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                );
+            case "education":
+                return education?.length > 0 && (
+                    <div key="education" className="mb-4">
+                        <h4 className="resume-section-title">Education</h4>
+                        {education.map((edu) => (
+                            <div key={edu.id} className="mb-3">
+                                <div className="d-flex justify-content-between align-items-baseline mb-1">
+                                    <h5 className="resume-item-title mb-0">{edu.degree || "Degree/Program"}</h5>
+                                    <span className="resume-item-date">{edu.startYear || "Start"} – {edu.endYear || "End"}</span>
+                                </div>
+                                <div className="resume-item-subtitle">{edu.institute || "Institution Name"}</div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            case "skills":
+                return skills?.length > 0 && (
+                    <div key="skills" className="mb-4">
+                        <h4 className="resume-section-title">Skills</h4>
+                        <div className="d-flex flex-wrap gap-2">
+                            {skills.map((skill, index) => (
+                                <span key={index} className="badge-skill">{skill}</span>
+                            ))}
+                        </div>
+                    </div>
+                );
+            case "languages":
+                return languages?.length > 0 && (
+                    <div key="languages" className="mb-4">
+                        <h4 className="resume-section-title">Languages</h4>
+                        <div className="d-flex flex-wrap gap-2">
+                            {languages.map((lang, index) => (
+                                <span key={index} className="badge-skill">{lang}</span>
+                            ))}
+                        </div>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="resume-a4">
             <div className="row g-0 h-100">
@@ -46,29 +142,7 @@ export default function ModernResume({ summary, personalInfo, additionalInfo, vi
                         );
                     })}
 
-                    {/* Skills */}
-                    <h5>Skills</h5>
-                    {skills?.length > 0 ? (
-                        <div>
-                            {skills.map((skill, index) => (
-                                <span key={index} className="badge-skill">{skill}</span>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-muted small">No skills added.</p>
-                    )}
-
-                    {/* Languages */}
-                    <h5>Languages</h5>
-                    {languages?.length > 0 ? (
-                        <div>
-                            {languages.map((lang, index) => (
-                                <span key={index} className="badge-skill">{lang}</span>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-muted small">No languages added.</p>
-                    )}
+                    {/* Optional Fields rendered above... */}
                 </div>
 
                 {/* Right Content */}
@@ -77,77 +151,7 @@ export default function ModernResume({ summary, personalInfo, additionalInfo, vi
                     <h1 className="resume-name">{personalInfo?.fullName || "Your Name"}</h1>
                     <h3 className="resume-title">{personalInfo?.jobTitle || "Professional Title"}</h3>
 
-                    {/* Summary */}
-                    {summary && (
-                        <div className="mb-4">
-                            <p style={{ whiteSpace: "pre-wrap", color: "var(--theme-text-dark, #444)", fontSize: "0.95rem", lineHeight: "1.6" }}>
-                                {summary}
-                            </p>
-                        </div>
-                    )}
-
-                    {/* Experience */}
-                    <h4 className="resume-section-title">Experience</h4>
-                    {experience?.length > 0 ? (
-                        experience.map((exp) => (
-                            <div key={exp.id} className="mb-4">
-                                <div className="d-flex justify-content-between align-items-baseline mb-1">
-                                    <h5 className="resume-item-title mb-0">{exp.position || "Job Title"}</h5>
-                                    <span className="resume-item-date">{exp.startDate || "Start Date"} – {exp.endDate || "Present"}</span>
-                                </div>
-                                <div className="resume-item-subtitle mb-2">{exp.company || "Company Name"}</div>
-                                {exp.responsibilities && (
-                                    <ul className="resume-list">
-                                        {exp.responsibilities
-                                            .split("\n")
-                                            .filter(line => line.trim() !== "")
-                                            .map((line, index) => (
-                                                <li key={index}>{line}</li>
-                                            ))}
-                                    </ul>
-                                )}
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-muted small mb-4">No experience added.</p>
-                    )}
-
-                    {/* Projects */}
-                    {projects?.length > 0 && (
-                        <>
-                            <h4 className="resume-section-title">Projects</h4>
-                            {projects.map((proj) => (
-                                <div key={proj.id} className="mb-4">
-                                    <h5 className="resume-item-title mb-1">{proj.title || "Project Title"}</h5>
-                                    <p className="mb-1" style={{ fontSize: "0.95rem", color: "var(--theme-text-dark, #444)" }}>
-                                        {proj.description || "Project description goes here."}
-                                    </p>
-                                    {proj.link && (
-                                        <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.9rem", color: "var(--theme-accent, #3498db)" }}>
-                                            {proj.link}
-                                        </a>
-                                    )}
-                                </div>
-                            ))}
-                        </>
-                    )}
-
-                    {/* Education */}
-                    <h4 className="resume-section-title">Education</h4>
-                    {education?.length > 0 ? (
-                        education.map((edu) => (
-                            <div key={edu.id} className="mb-3">
-                                <div className="d-flex justify-content-between align-items-baseline mb-1">
-                                    <h5 className="resume-item-title mb-0">{edu.degree || "Degree/Program"}</h5>
-                                    <span className="resume-item-date">{edu.startYear || "Start"} – {edu.endYear || "End"}</span>
-                                </div>
-                                <div className="resume-item-subtitle">{edu.institute || "Institution Name"}</div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-muted small">No education added.</p>
-                    )}
-
+                    {sectionsConfig.filter(s => s.visible).map(section => renderSection(section.id))}
                 </div>
             </div>
         </div>

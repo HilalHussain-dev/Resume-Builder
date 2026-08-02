@@ -9,7 +9,7 @@ export default function TemplateSelector({ selectedTemplate, setSelectedTemplate
     return (
         <div className="mb-4">
             <h5 className="mb-3">Resume Template</h5>
-            <select 
+            <select
                 className="form-select shadow-sm"
                 value={selectedTemplate}
                 onChange={(e) => setSelectedTemplate(e.target.value)}

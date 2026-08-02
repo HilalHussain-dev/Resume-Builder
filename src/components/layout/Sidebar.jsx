@@ -1,7 +1,4 @@
 import { useState } from "react";
-import ThemeSelector from "../common/ThemeSelector";
-import { downloadPDF } from "../../utils/pdfExport";
-import TemplateSelector from "../common/TemplateSelector";
 import PersonalForm from "../forms/PersonalForm";
 import SummaryForm from "../forms/SummaryForm";
 import EducationForm from "../forms/EducationForm";
@@ -40,16 +37,6 @@ export default function Sidebar({
 
     return (
         <div className="bg-white rounded-4 shadow-sm p-4 h-100 no-print" style={{ border: '1px solid #eaeaea' }}>
-
-            <div className="mb-4 pb-3 border-bottom">
-                <h6 className="text-muted text-uppercase small fw-bold mb-3"><i className="bi bi-palette-fill me-2"></i>Design Settings</h6>
-                <ThemeSelector />
-                <TemplateSelector
-                    selectedTemplate={selectedTemplate}
-                    setSelectedTemplate={setSelectedTemplate}
-                />
-            </div>
-
             <h6 className="text-muted text-uppercase small fw-bold mb-3"><i className="bi bi-pencil-square me-2"></i>Content Editor</h6>
 
             <div className="accordion custom-accordion" id="resumeAccordion">

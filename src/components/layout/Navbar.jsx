@@ -1,6 +1,6 @@
-export default function Navbar({ onDownload, isDownloading, onNewResume }) {
+export default function Navbar({ onDownload, isDownloading, onNewResume, onOpenSettings }) {
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 mb-4 sticky-top no-print" style={{ zIndex: 1000 }}>
+        <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 fixed-top no-print" style={{ zIndex: 1000 }}>
             <div className="container-fluid px-4">
                 <a className="navbar-brand fw-bold d-flex align-items-center" href="/">
                     <i className="bi bi-file-earmark-person-fill text-primary fs-3 me-2"></i>
@@ -19,6 +19,14 @@ export default function Navbar({ onDownload, isDownloading, onNewResume }) {
                         disabled={isDownloading}
                     >
                         <i className="bi bi-plus-circle"></i> <span className="d-none d-sm-inline">New Resume</span>
+                    </button>
+
+                    <button 
+                        className="btn btn-dark fw-bold shadow-sm d-flex align-items-center gap-2 px-3 px-md-4 rounded-pill transition-all"
+                        onClick={onOpenSettings}
+                        disabled={isDownloading}
+                    >
+                        <i className="bi bi-gear-fill"></i> <span className="d-none d-sm-inline">Resume Settings</span>
                     </button>
 
                     <button 

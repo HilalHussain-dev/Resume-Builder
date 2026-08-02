@@ -3,30 +3,32 @@ import MinimalResume from "../../templates/MinimalResume";
 import ProfessionalResume from "../../templates/ProfessionalResume";
 import CreativeResume from "../../templates/CreativeResume";
 
-export default function PreviewPanel({ 
-    selectedTemplate, 
-    summary, 
+export default function PreviewPanel({
+    selectedTemplate,
+    summary,
     personalInfo,
     additionalInfo,
-    visibleAdditionalFields, 
-    education, 
-    experience, 
-    skills, 
-    languages, 
-    projects 
+    visibleAdditionalFields,
+    education,
+    experience,
+    skills,
+    languages,
+    projects,
+    sectionsConfig
 }) {
-    
+
     // Group props to easily pass them down
-    const resumeData = { 
-        summary, 
+    const resumeData = {
+        summary,
         personalInfo,
         additionalInfo,
-        visibleAdditionalFields, 
-        education, 
-        experience, 
-        skills, 
-        languages, 
-        projects 
+        visibleAdditionalFields,
+        education,
+        experience,
+        skills,
+        languages,
+        projects,
+        sectionsConfig
     };
 
     switch (selectedTemplate) {

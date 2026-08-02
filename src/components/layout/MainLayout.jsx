@@ -3,12 +3,13 @@ import PreviewPanel from "./PreviewPanel";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import NewResumeModal from "../common/NewResumeModal";
+import ResumeSettingsOffcanvas from "./ResumeSettingsOffcanvas";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { downloadPDF } from "../../utils/pdfExport";
 import { useTheme } from "../../context/ThemeContext";
 import { defaultAdditionalInfo } from "../../config/additionalFields";
-
+import { defaultSectionsConfig } from "../../config/sectionsConfig";
 const loadState = (key, defaultValue) => {
     try {
         const saved = localStorage.getItem(key);
@@ -31,8 +32,10 @@ export default function MainLayout() {
     const { setTheme } = useTheme();
     const [isDownloading, setIsDownloading] = useState(false);
     const [showNewResumeModal, setShowNewResumeModal] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     const [selectedTemplate, setSelectedTemplate] = useState(() => loadState("resume-template", "modern"));
+    const [fontFamily, setFontFamily] = useState(() => loadState("resume-fontFamily", "Inter"));
     const [summary, setSummary] = useState(() => loadState("resume-summary", ""));
     const [personalInfo, setPersonalInfo] = useState(() => loadState("resume-personalInfo", defaultPersonalInfo));
 
@@ -54,9 +57,12 @@ export default function MainLayout() {
     const [projects, setProjects] = useState(() => loadState("resume-projects", []));
     const [languages, setLanguages] = useState(() => loadState("resume-languages", []));
 
+    // Section Manager State
+    const [sectionsConfig, setSectionsConfig] = useState(() => loadState("resume-sectionsConfig", defaultSectionsConfig));
     // Auto-save every change to localStorage
     useEffect(() => {
         localStorage.setItem("resume-template", JSON.stringify(selectedTemplate));
+        localStorage.setItem("resume-fontFamily", JSON.stringify(fontFamily));
         localStorage.setItem("resume-summary", JSON.stringify(summary));
         localStorage.setItem("resume-personalInfo", JSON.stringify(personalInfo));
         localStorage.setItem("resume-additionalInfo", JSON.stringify(additionalInfo));
@@ -66,7 +72,8 @@ export default function MainLayout() {
         localStorage.setItem("resume-skills", JSON.stringify(skills));
         localStorage.setItem("resume-projects", JSON.stringify(projects));
         localStorage.setItem("resume-languages", JSON.stringify(languages));
-    }, [selectedTemplate, summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, projects, languages]);
+        localStorage.setItem("resume-sectionsConfig", JSON.stringify(sectionsConfig));
+    }, [selectedTemplate, fontFamily, summary, personalInfo, additionalInfo, visibleAdditionalFields, education, experience, skills, projects, languages, sectionsConfig]);
 
     const handleDownload = async () => {
         setIsDownloading(true);
@@ -122,11 +129,13 @@ export default function MainLayout() {
         setSkills([]);
         setProjects([]);
         setLanguages([]);
+        setSectionsConfig(defaultSectionsConfig);
 
         // Clear local storage for these keys
         const keysToRemove = [
             "resume-template",
             "resume-theme",
+            "resume-fontFamily",
             "resume-summary",
             "resume-personalInfo",
             "resume-additionalInfo",
@@ -135,7 +144,8 @@ export default function MainLayout() {
             "resume-experience",
             "resume-skills",
             "resume-projects",
-            "resume-languages"
+            "resume-languages",
+            "resume-sectionsConfig"
         ];
         keysToRemove.forEach(key => localStorage.removeItem(key));
 
@@ -146,14 +156,17 @@ export default function MainLayout() {
 
     return (
         <div className="bg-light min-vh-100 d-flex flex-column">
-            <Navbar onDownload={handleDownload} isDownloading={isDownloading} onNewResume={handleNewResumeClick} />
-            <div className="container-fluid py-4 flex-grow-1">
+            <Navbar 
+                onDownload={handleDownload} 
+                isDownloading={isDownloading} 
+                onNewResume={handleNewResumeClick} 
+                onOpenSettings={() => setIsSettingsOpen(true)}
+            />
+            <div className="container-fluid py-4 flex-grow-1" style={{ marginTop: '76px' }}>
                 <div className="row">
                     {/* Left Side */}
                     <div className="col-lg-4 mb-4 no-print">
                         <Sidebar
-                            selectedTemplate={selectedTemplate}
-                            setSelectedTemplate={setSelectedTemplate}
                             summary={summary}
                             setSummary={setSummary}
                             personalInfo={personalInfo}
@@ -180,6 +193,7 @@ export default function MainLayout() {
                         <div id="resume-preview-container">
                             <PreviewPanel
                                 selectedTemplate={selectedTemplate}
+                                fontFamily={fontFamily}
                                 summary={summary}
                                 personalInfo={personalInfo}
                                 additionalInfo={additionalInfo}
@@ -189,12 +203,24 @@ export default function MainLayout() {
                                 skills={skills}
                                 projects={projects}
                                 languages={languages}
+                                sectionsConfig={sectionsConfig}
                             />
                         </div>
                     </div>
                 </div>
             </div>
             <Footer />
+
+            <ResumeSettingsOffcanvas
+                isOpen={isSettingsOpen}
+                onClose={() => setIsSettingsOpen(false)}
+                selectedTemplate={selectedTemplate}
+                setSelectedTemplate={setSelectedTemplate}
+                fontFamily={fontFamily}
+                setFontFamily={setFontFamily}
+                sectionsConfig={sectionsConfig}
+                setSectionsConfig={setSectionsConfig}
+            />
 
             <NewResumeModal
                 isOpen={showNewResumeModal}
