@@ -4,16 +4,16 @@ export default function Navbar({ onDownload, isDownloading, onNewResume, onOpenS
             <div className="container-fluid px-4">
                 <a className="navbar-brand fw-bold d-flex align-items-center" href="/">
                     <i className="bi bi-file-earmark-person-fill text-primary fs-3 me-2"></i>
-                    <span>Resume<span className="text-primary">Pro</span></span>
+                    <span>Cvmaker<span className="text-primary">24</span></span>
                 </a>
-                
+
                 <div className="d-flex ms-auto align-items-center gap-3 gap-md-4">
                     <span className="text-muted small d-none d-md-flex align-items-center">
-                        <i className="bi bi-cloud-check-fill text-success me-2 fs-5"></i> 
+                        <i className="bi bi-cloud-check-fill text-success me-2 fs-5"></i>
                         Auto-saved
                     </span>
-                    
-                    <button 
+
+                    <button
                         className="btn btn-outline-secondary fw-bold shadow-sm d-flex align-items-center gap-2 px-3 px-md-4 rounded-pill transition-all"
                         onClick={onNewResume}
                         disabled={isDownloading}
@@ -21,7 +21,7 @@ export default function Navbar({ onDownload, isDownloading, onNewResume, onOpenS
                         <i className="bi bi-plus-circle"></i> <span className="d-none d-sm-inline">New Resume</span>
                     </button>
 
-                    <button 
+                    <button
                         className="btn btn-dark fw-bold shadow-sm d-flex align-items-center gap-2 px-3 px-md-4 rounded-pill transition-all"
                         onClick={onOpenSettings}
                         disabled={isDownloading}
@@ -29,7 +29,7 @@ export default function Navbar({ onDownload, isDownloading, onNewResume, onOpenS
                         <i className="bi bi-gear-fill"></i> <span className="d-none d-sm-inline">Resume Settings</span>
                     </button>
 
-                    <button 
+                    <button
                         className="btn btn-primary fw-bold shadow-sm d-flex align-items-center gap-2 px-4 rounded-pill transition-all"
                         onClick={onDownload}
                         disabled={isDownloading}
